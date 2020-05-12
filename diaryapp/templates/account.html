@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="flex items-center">
+    <img class="w-25 h-25 rounded-full mr-4" src="{{ image_file }}" alt="Image">
+    <div class="text-gray-900 font-bold text-xl mb-2">
+<br>
+{{ current_user.username }}<br>
+{{ current_user.email }}
+
+<br><br><br>
+Account Update Form<br><br>
+<form method = "POST" action = "">
+	{{ form.hidden_tag() }}
+
+	{{ form.username.label }}
+	{{ form.username }}<br><br>
+
+	{{ form.email.label }}
+	{{ form.email }}<br><br>
+
+	{{ form.picture.label }}
+	{{ form.picture }}<br><br>
+
+	{{ form.submit }}<br><br>
+	
+</form>
+</div>
+</div>
+{% endblock %}

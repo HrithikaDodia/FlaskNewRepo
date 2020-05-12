@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+	<title></title>
+	
+</head>
+<body>
+	{% with messages=get_flashed_messages() %}
+		{% if messages %}
+		{% for m in messages %}
+		{{ m }}
+		{% endfor %}
+		{% endif %}
+	{% endwith %}
+	{% block content %}{% endblock %}
+	
+</body>
+</html>
