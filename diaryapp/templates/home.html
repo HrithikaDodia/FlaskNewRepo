@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 
 {% block content %}
-{% for page in pages %}
-
-			<div class="max-w-sm w-full lg:max-w-full lg:flex">
-  <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" style="background-image: url('../static/profile/default.jpg')" title="Woman holding a mug">
+{% for post in posts %}
+<div class="container mx-auto px-4">
+<div class="max-w-sm w-full lg:max-w-full lg:flex">
+  <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" style="background-image: url('{{image_file}}')" title="Woman holding a mug">
   </div>
   <div class="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
     <div class="mb-8">
@@ -14,19 +14,17 @@
         </svg>
         Members only
       </p>
-      <div class="text-gray-900 font-bold text-xl mb-2">{{ page.title }}</div>
-      <p class="text-gray-700 text-base">{{ page.author }}</p>
+      <div class="text-gray-900 font-bold text-xl mb-2">{{ post.title }}</div>
+      <p class="text-gray-700 text-base">{{ post.author }}</p>
     </div>
     <div class="flex items-center">
-    <img class="w-10 h-10 rounded-full mr-4" src="../static/profile/default.jpg" alt="Image">
+    <img class="w-10 h-10 rounded-full mr-4" src="{{ image_file }}" alt="Image">
       <div class="text-sm">
-        <p class="text-gray-900 leading-none">{{ page.text_content }}</p>
         <p class="text-gray-600">{{ current_user.email }}</p>
       </div>
     </div>
-  </div>
 </div>
-
+</div>
 {% endfor %}
 Home Page
 

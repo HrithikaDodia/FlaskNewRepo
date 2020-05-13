@@ -1,15 +1,17 @@
-from flask import render_template, flash, url_for, redirect, request
+from flask import render_template, flash, url_for, redirect, request, jsonify
 import secrets
 import os
-from diaryapp import app, db, bcrypt
+
+from diaryapp import app, db, bcrypt, ma
 from diaryapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
-from diaryapp.models import User, Post
+from diaryapp.models import User, Post, PostSchema
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html' ,pages = Post.query.all())
+	image_file = url_for('static', filename='profile/' + current_user.image_file)
+	return render_template('home.html', posts = Post.query.all(), image_file = image_file)
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
@@ -73,14 +75,69 @@ def account():
 	return render_template('account.html', title='Account', image_file = image_file, form=form)
 
 
-@app.route('/page/new', methods = ['GET', 'POST'])
+@app.route('/post/new', methods = ['GET', 'POST'])
 @login_required
 def new_page():
 	form = PostForm()
 	if form.validate_on_submit():
-		page = Post(title=form.title.data, text_content = form.content.data, author = current_user)
-		db.session.add(page)
+		post = Post(title=form.title.data, text_content = form.text_content.data, author = current_user)
+		db.session.add(post)
 		db.session.commit()
-		flash('Your page has been created')
+		flash('Your post has been created')
 		return redirect(url_for('home'))
 	return render_template('create_page.html', title='New Page', form=form)
+
+@app.route('/post/<post_id>')
+def fetch_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	return render_template('fetch.html', post = post)
+
+
+@app.route('/post/update/<post_id>', methods = ['GET', 'POST'])
+@login_required
+def update_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	form = PostForm()
+	if form.validate_on_submit():
+		post.title = form.title.data
+		post.text_content = form.text_content.data
+		db.session.commit()
+		flash('Your post has been updated')
+		return redirect(url_for('home'))
+	elif request.method == 'GET':
+		form.title.data = post.title
+		form.text_content.data = post.text_content
+	return render_template('update.html', form = form)
+
+@app.route('/post/delete/<post_id>', methods = ['GET'])
+@login_required
+def delete_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	db.session.delete(post)
+	db.session.commit()
+	flash('Your post has been deleted')
+	return redirect(url_for('home'))
+
+post_schema = PostSchema()
+posts_schema = PostSchema(many = True)
+
+@app.route('/api/post', methods = ['POST'])
+def create_post():
+	title = request.json['title']
+	text_content = request.json['text_content']
+	user_id = request.json['user_id']
+
+	post = Post(title=title, text_content=text_content, user_id=user_id)
+
+	db.session.add(post)
+
+	db.session.commit()
+
+	return post_schema.jsonify(post)
+
+@app.route('/api/post', methods = ['GET'])
+def list_post():
+	posts = Post.query.all()
+	result = posts_schema.dump(posts)
+	return jsonify(result)
+

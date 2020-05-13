@@ -1,5 +1,5 @@
 from datetime import datetime
-from diaryapp import db, login_manager
+from diaryapp import db, login_manager, ma
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -26,3 +26,7 @@ class Post(db.Model):
 
 	def __repr__(self):
 		return self.title
+
+class PostSchema(ma.Schema):
+	class Meta:
+		fields = ('id', 'title', 'text_content', 'user_id')
