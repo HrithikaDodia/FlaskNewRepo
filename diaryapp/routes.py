@@ -142,3 +142,8 @@ def list_post():
 	result = posts_schema.dump(posts)
 	return jsonify(result)
 
+@app.route('/api/login', methods = ['GET', 'POST'])
+def login_api():
+	user = User.query.filter_by(id = request.json['user_id']).first()
+	login_user(user)
+	return jsonify({'success':True})
