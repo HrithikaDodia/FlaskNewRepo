@@ -38,7 +38,7 @@ def login():
 		user = User.query.filter_by(email=form.email.data).first()
 		if user and bcrypt.check_password_hash(user.password, form.password.data):
 			login_user(user, remember=form.remember.data)
-			return redirect(url_for('home'))
+			return redirect(url_for('account'))
 		else:
 			flash('Login Unsuccessful')
 	return render_template('login.html', form = form)
@@ -122,6 +122,7 @@ post_schema = PostSchema()
 posts_schema = PostSchema(many = True)
 
 @app.route('/api/post', methods = ['POST'])
+@login_required
 def create_post():
 	title = request.json['title']
 	text_content = request.json['text_content']
