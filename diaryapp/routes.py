@@ -133,7 +133,7 @@ def create_post():
 
 	db.session.commit()
 
-	return post_schema.jsonify(post)
+	return post_schema.jsonify(post), 201
 
 @app.route('/api/post', methods = ['GET'])
 def list_post():
