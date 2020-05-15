@@ -123,7 +123,7 @@ posts_schema = PostSchema(many = True)
 
 @app.route('/api/post', methods = ['POST'])
 @login_required
-def create_post():
+def create_post_api():
 	title = request.json['title']
 	text_content = request.json['text_content']
 	user_id = request.json['user_id']
@@ -137,7 +137,7 @@ def create_post():
 	return post_schema.jsonify(post), 201
 
 @app.route('/api/post', methods = ['GET'])
-def list_post():
+def list_post_api():
 	posts = Post.query.all()
 	result = posts_schema.dump(posts)
 	return jsonify(result)
@@ -147,3 +147,12 @@ def login_api():
 	user = User.query.filter_by(id = request.json['user_id']).first()
 	login_user(user)
 	return jsonify({'success':True})
+
+@app.route('/api/update/<int:post_id>', methods = ['PUT'])
+@login_required
+def update_post_api(post_id):
+	post = Post.query.get_or_404(post_id)
+	post.title = request.json['title']
+	post.text_content = request.json['text_content']
+	db.session.commit()
+	return post_schema.jsonify(post)
