@@ -30,3 +30,4 @@ class Post(db.Model):
 class PostSchema(ma.Schema):
 	class Meta:
 		fields = ('id', 'title', 'text_content', 'user_id')
+
