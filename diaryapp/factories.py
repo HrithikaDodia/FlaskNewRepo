@@ -11,11 +11,10 @@ import diaryapp
 class TestConfig(object):
     TESTING = True
     WTF_CSRF_ENABLED = False
-    SECRET_KEY = os.environ.get('SECRET_KEY', '62582fc136cac3457137050bc8d857c6')
+    SECRET_KEY = os.environ.get('SECRET_KEY', '62582fc136cac3457137050bc8d857c4')
     SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
-    LOG_CLI=True
 
 
 # @pytest.fixture(scope='module')
